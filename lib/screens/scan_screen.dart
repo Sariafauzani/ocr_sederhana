@@ -28,10 +28,7 @@ class _ScanScreenState extends State<ScanScreen> {
   void _initCamera() async {
     try {
       cameras = await availableCameras();
-      _controller = CameraController(
-        cameras.first,
-        ResolutionPreset.medium,
-      );
+      _controller = CameraController(cameras.first, ResolutionPreset.medium);
 
       _initializeControllerFuture = _controller!.initialize();
       await _initializeControllerFuture;
@@ -54,8 +51,9 @@ class _ScanScreenState extends State<ScanScreen> {
   Future<String> _ocrFromFile(File imageFile) async {
     final inputImage = InputImage.fromFile(imageFile);
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final RecognizedText recognizedText =
-        await textRecognizer.processImage(inputImage);
+    final RecognizedText recognizedText = await textRecognizer.processImage(
+      inputImage,
+    );
     textRecognizer.close();
     return recognizedText.text;
   }
@@ -82,24 +80,37 @@ class _ScanScreenState extends State<ScanScreen> {
       if (!mounted) return;
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => ResultScreen(ocrText: ocrText),
-        ),
+        MaterialPageRoute(builder: (_) => ResultScreen(ocrText: ocrText)),
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Pemindaian Gagal! Periksa Izin Kamera atau coba lagi'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Jika controller belum siap, tampilkan loading
+    // Jika controller belum siap, tampilkan loading custom
     if (_controller == null || !_controller!.value.isInitialized) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
+      return Scaffold(
+        backgroundColor: Colors.grey[900],
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(color: Colors.yellow),
+              SizedBox(height: 20),
+              Text(
+                'Memuat Kamera... Harap tunggu.',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ],
+          ),
         ),
       );
     }
@@ -123,8 +134,10 @@ class _ScanScreenState extends State<ScanScreen> {
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
