@@ -43,7 +43,7 @@
 
 ## Hasil
 
-[Dokumentasi Hasil](https://drive.google.com/file/d/1uqb7jZLoCTx5F4ozc-diM-Sr95G2ViZM/view?usp=sharing)
+[Dokumentasi Hasil](https://drive.google.com/drive/folders/1Wmy6BFot-SGf2krSgHBoNvQL2ojky5fN?usp=sharing)
 
 
 ## Laporan JS & UTS
